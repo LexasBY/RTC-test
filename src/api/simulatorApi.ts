@@ -16,7 +16,6 @@ export interface MappingsResponse {
 export async function fetchState(): Promise<StateResponse> {
   try {
     const response = await axios.get<StateResponse>(`${MOCK_SERVER_URL}/state`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Failed to fetch state: ${error}`);
@@ -28,7 +27,6 @@ export async function fetchMappings(): Promise<MappingsResponse> {
     const response = await axios.get<MappingsResponse>(
       `${MOCK_SERVER_URL}/mappings`
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Failed to fetch mappings: ${error}`);
