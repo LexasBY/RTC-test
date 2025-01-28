@@ -117,8 +117,6 @@ services:
 
 ## Future Improvements
 
-- **Testing:** Add integration tests for both servers to ensure proper communication.
-- **Error Handling:** Enhance error handling for API failures.
 - **Scalability:** Consider separating mock server and simulation server into independent repositories for larger projects.
 
 ---
