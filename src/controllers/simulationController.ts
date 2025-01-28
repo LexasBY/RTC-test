@@ -5,8 +5,6 @@ import {
   getState as getSimulationState,
   SportEvent,
   updateState,
-  resetState,
-  processState,
 } from "../services/stateService";
 
 export function getClientState(req: Request, res: Response) {
@@ -18,38 +16,43 @@ export function getClientState(req: Request, res: Response) {
   res.json(formattedState);
 }
 
-export async function getState(req: Request, res: Response) {
-  try {
-    const stateResponse = await fetchState();
-    const mappingsResponse = await fetchMappings();
-
-    const processedState = processState(
-      stateResponse.odds,
-      mappingsResponse.mappings
-    );
-
-    res.json(processedState);
-  } catch (error) {
-    res.status(500).send("Failed to fetch state");
-  }
-}
+let previousOdds: string = "";
+let cachedMappings: string = "";
 
 async function updateSimulationState() {
   try {
     const stateResponse = await fetchState();
-    const mappingsResponse = await fetchMappings();
-    updateState(stateResponse.odds, mappingsResponse.mappings);
+    const currentOdds = stateResponse.odds;
+    if (currentOdds !== previousOdds) {
+      const mappingsResponse = await fetchMappings();
+      cachedMappings = mappingsResponse.mappings;
+      updateState(currentOdds, cachedMappings);
+
+      previousOdds = currentOdds;
+    } else {
+      updateState(currentOdds, cachedMappings);
+    }
   } catch (error) {
     console.error("Failed to update simulation state:", error);
   }
 }
 
 export function startSimulationUpdates() {
+  (async () => {
+    try {
+      const stateResponse = await fetchState();
+      const mappingsResponse = await fetchMappings();
+
+      cachedMappings = mappingsResponse.mappings;
+      updateState(stateResponse.odds, cachedMappings);
+
+      previousOdds = stateResponse.odds;
+    } catch (error) {
+      console.error("Failed to initialize simulation state:", error);
+    }
+  })();
+
   setInterval(async () => {
     await updateSimulationState();
   }, 1000);
-
-  setInterval(() => {
-    resetState();
-  }, 5 * 60 * 1000);
 }

@@ -22,7 +22,6 @@ const readDbFile = (): Promise<any> => {
 app.get("/api/state", async (_req: Request, res: Response) => {
   try {
     const data = await readDbFile();
-    console.log(data);
     if (data.state) {
       res.json(data.state);
     } else {
@@ -36,7 +35,6 @@ app.get("/api/state", async (_req: Request, res: Response) => {
 app.get("/api/mappings", async (_req: Request, res: Response) => {
   try {
     const data = await readDbFile();
-    console.log(data);
     if (data.mappings) {
       res.json(data.mappings);
     } else {
@@ -46,7 +44,8 @@ app.get("/api/mappings", async (_req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to retrieve mappings" });
   }
 });
-
-app.listen(PORT, () => {
-  console.log(`Mock server is running at http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
+export { app, server };
