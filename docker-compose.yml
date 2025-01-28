@@ -1,7 +1,14 @@
-version: '3'
+version: "3.9"
 
 services:
-  simulation:
-    image: mysteriouscrawler/test
+  app:
+    build:
+      context: .
+    container_name: rtc-app
     ports:
       - "3000:3000"
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start-all

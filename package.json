@@ -7,7 +7,8 @@
     "start": "node dist/index.js",
     "build": "tsc --project tsconfig.build.json",
     "test": "vitest run --coverage",
-    "mock-server": "json-server --port 4000 db.json"
+    "mock-server": "node dist/server.js",
+    "start-all": "npm-run-all --parallel start mock-server"
   },
   "author": "SR",
   "license": "MIT",
@@ -15,7 +16,7 @@
     "@types/axios": "^0.9.36",
     "@types/express": "^5.0.0",
     "@vitest/coverage-v8": "^1.3.1",
-    "json-server": "^1.0.0-beta.3",
+    "npm-run-all": "^4.1.5",
     "supertest": "^7.0.0",
     "typescript": "^5.4.2",
     "vitest": "^1.3.1"
